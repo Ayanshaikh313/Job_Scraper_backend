@@ -1,0 +1,48 @@
+const express = require('express');
+const cors = require('cors');
+const connectDB = require('./config/database');
+const env = require('./config/env');
+const authRoutes = require('./routes/authRoutes');
+const { errorHandler } = require('./middleware/auth');
+
+const app = express();
+
+// Middleware
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
+
+// Connect to MongoDB
+connectDB();
+
+// Routes
+app.use('/api/auth', authRoutes);
+
+// Health check endpoint
+app.get('/api/health', (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: 'Server is running',
+    timestamp: new Date().toISOString(),
+  });
+});
+
+// 404 handler
+app.use((req, res) => {
+  res.status(404).json({
+    success: false,
+    message: 'Route not found',
+  });
+});
+
+// Error handling middleware
+app.use(errorHandler);
+
+// Start server
+const PORT = env.server.port;
+app.listen(PORT, () => {
+  console.log(`✓ Server running on http://localhost:${PORT}`);
+  console.log(`✓ Environment: ${env.server.nodeEnv}`);
+});
+
+module.exports = app;
