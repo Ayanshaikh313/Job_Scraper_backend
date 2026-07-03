@@ -61,6 +61,11 @@ const authorize = (...allowedRoles) => {
 };
 
 /**
+ * Alias for authorize middleware for clarity (authorizeRoles)
+ */
+const authorizeRoles = authorize;
+
+/**
  * Error handling middleware
  */
 const errorHandler = (err, req, res, next) => {
@@ -77,5 +82,6 @@ const errorHandler = (err, req, res, next) => {
 module.exports = {
   authenticate,
   authorize,
+  authorizeRoles,
   errorHandler,
 };

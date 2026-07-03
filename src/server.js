@@ -3,6 +3,7 @@ const cors = require('cors');
 const connectDB = require('./config/database');
 const env = require('./config/env');
 const authRoutes = require('./routes/authRoutes');
+const jobRoutes = require('./routes/jobRoutes');
 const { errorHandler } = require('./middleware/auth');
 
 const app = express();
@@ -17,6 +18,7 @@ connectDB();
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/jobs', jobRoutes);
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {

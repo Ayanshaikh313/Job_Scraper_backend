@@ -139,7 +139,98 @@ const login = async (req, res, next) => {
   }
 };
 
+/**
+ * Get user profile
+ * GET /api/auth/profile
+ * Protected route - requires authentication
+ */
+const getProfile = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+
+    const user = await User.findById(userId).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile retrieved successfully',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
+/**
+ * Update user profile
+ * PUT /api/auth/profile
+ * Protected route - requires authentication
+ */
+const updateProfile = async (req, res, next) => {
+  try {
+    const userId = req.userId;
+    const { name, email } = req.body;
+
+    // Validation
+    if (!name && !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide at least one field to update',
+      });
+    }
+
+    // Build update object
+    const updateData = {};
+    if (name) updateData.name = name;
+    if (email) updateData.email = email.toLowerCase();
+
+    // If email is being updated, check uniqueness (excluding current user)
+    if (email) {
+      const existingUser = await User.findOne({
+        email: email.toLowerCase(),
+        _id: { $ne: userId },
+      });
+
+      if (existingUser) {
+        return res.status(409).json({
+          success: false,
+          message: 'Email already in use',
+        });
+      }
+    }
+
+    // Update user
+    const user = await User.findByIdAndUpdate(userId, updateData, {
+      new: true,
+      runValidators: true,
+    }).select('-password');
+
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found',
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: user,
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   register,
   login,
+  getProfile,
+  updateProfile,
 };
