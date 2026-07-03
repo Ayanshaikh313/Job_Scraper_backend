@@ -6,6 +6,7 @@ const {
   updateJob,
   deleteJob,
 } = require('../controllers/jobController');
+const { getExternalJobs } = require('../controllers/externalJobController');
 const { authenticate, authorizeRoles } = require('../middleware/auth');
 
 const router = express.Router();
@@ -16,6 +17,14 @@ const router = express.Router();
  * Protected - Only Hiring Managers
  */
 router.post('/', authenticate, authorizeRoles('hiring_manager'), createJob);
+
+/**
+ * GET /api/jobs/external
+ * Get external jobs from RemoteOK and Arbeitnow APIs
+ * Protected - All authenticated users
+ * Query params: search
+ */
+router.get('/external', authenticate, getExternalJobs);
 
 /**
  * GET /api/jobs
