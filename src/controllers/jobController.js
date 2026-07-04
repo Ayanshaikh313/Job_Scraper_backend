@@ -7,7 +7,7 @@ const Job = require('../models/Job');
  */
 const createJob = async (req, res, next) => {
   try {
-    const { title, company, location, description, salary, employmentType } = req.body;
+    const { title, company, location, description, salary, employmentType, screeningQuestions } = req.body;
 
     // Validation
     if (!title || !company || !location || !description || !salary || !employmentType) {
@@ -34,6 +34,7 @@ const createJob = async (req, res, next) => {
       description,
       salary: salary.trim(),
       employmentType,
+      screeningQuestions: screeningQuestions || [],
       createdBy: req.userId,
     });
 
@@ -144,10 +145,10 @@ const getJobById = async (req, res, next) => {
 const updateJob = async (req, res, next) => {
   try {
     const { id } = req.params;
-    const { title, company, location, description, salary, employmentType } = req.body;
+    const { title, company, location, description, salary, employmentType, screeningQuestions } = req.body;
 
     // Validation - at least one field required
-    if (!title && !company && !location && !description && !salary && !employmentType) {
+    if (!title && !company && !location && !description && !salary && !employmentType && !screeningQuestions) {
       return res.status(400).json({
         success: false,
         message: 'Please provide at least one field to update',
@@ -191,6 +192,7 @@ const updateJob = async (req, res, next) => {
     if (description) updateData.description = description;
     if (salary) updateData.salary = salary.trim();
     if (employmentType) updateData.employmentType = employmentType;
+    if (screeningQuestions) updateData.screeningQuestions = screeningQuestions;
 
     // Update job
     const updatedJob = await Job.findByIdAndUpdate(id, updateData, {

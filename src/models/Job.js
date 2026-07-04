@@ -36,6 +36,18 @@ const jobSchema = new mongoose.Schema(
       ref: 'User',
       required: [true, 'Please provide the creator user ID'],
     },
+    screeningQuestions: [
+      {
+        question: {
+          type: String,
+          required: true,
+        },
+        required: {
+          type: Boolean,
+          default: false,
+        },
+      },
+    ],
   },
   {
     timestamps: true,
