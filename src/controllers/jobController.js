@@ -8,10 +8,6 @@ const Job = require('../models/Job');
 const createJob = async (req, res, next) => {
   try {
     const { title, company, location, description, salary, employmentType, screeningQuestions } = req.body;
-    console.log(
-      "CREATE JOB BODY:",
-      JSON.stringify(req.body, null, 2)
-    );
     // Validation
     if (!title || !company || !location || !description || !salary || !employmentType) {
       return res.status(400).json({
