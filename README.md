@@ -1,350 +1,176 @@
-# Job Scraper Backend - Phase 1
+# Job Scraper Platform
 
-Backend for the Job Scraper Platform built with Express.js, MongoDB, and JavaScript.
-
-## Complete Folder Structure
-
-```
-backend/
-├── src/
-│   ├── config/
-│   │   ├── database.js       # MongoDB connection setup
-│   │   └── env.js            # Environment variables configuration
-│   ├── controllers/
-│   │   └── authController.js # Authentication logic (register, login)
-│   ├── middleware/
-│   │   └── auth.js           # JWT authentication & authorization middleware
-│   ├── models/
-│   │   └── User.js           # User schema with bcryptjs hashing
-│   ├── routes/
-│   │   └── authRoutes.js     # Authentication endpoints
-│   ├── services/
-│   │   └── .gitkeep
-│   ├── utils/
-│   │   └── jwt.js            # JWT token generation and verification
-│   └── server.js             # Express server setup
-├── .env.example              # Environment variables template
-├── .gitignore                # Git ignore rules
-├── package.json              # Dependencies and scripts
-└── README.md                 # This file
-```
-
-## Created Files
-
-- ✓ `src/config/database.js`
-- ✓ `src/config/env.js`
-- ✓ `src/controllers/authController.js`
-- ✓ `src/middleware/auth.js`
-- ✓ `src/models/User.js`
-- ✓ `src/routes/authRoutes.js`
-- ✓ `src/utils/jwt.js`
-- ✓ `src/server.js`
-- ✓ `package.json`
-- ✓ `.env.example`
-- ✓ `.gitignore`
-
-## Installation Commands
-
-```bash
-# Navigate to backend folder
-cd backend
-
-# Install dependencies
-npm install
-
-# Create .env file from template
-copy .env.example .env
-
-# Edit .env with your MongoDB Atlas credentials
-```
-
-## Environment Variables Required
-
-Create a `.env` file in the backend folder:
-
-```env
-# MongoDB Atlas Configuration
-MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/job-scraper?retryWrites=true&w=majority
-
-# JWT Configuration
-JWT_SECRET=your_jwt_secret_key_here_change_in_production
-JWT_EXPIRE=7d
-
-# Server Configuration
-PORT=5000
-NODE_ENV=development
-```
-
-**How to get MongoDB URI:**
-1. Create account on [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a cluster
-3. Click "Connect" and choose "Drivers"
-4. Copy the connection string and replace `<username>` and `<password>`
-
-## Commands to Run the Backend
-
-```bash
-# Development mode
-npm run dev
-
-# Production mode
-npm start
-```
-
-Server will start on `http://localhost:5000`
-
-## API Endpoints
-
-### Register User
-
-**Endpoint:** `POST /api/auth/register`
-
-**Request Body:**
-```json
-{
-  "name": "John Doe",
-  "email": "john@example.com",
-  "password": "password123",
-  "confirmPassword": "password123",
-  "role": "student"
-}
-```
-
-**Valid roles:** `student` or `hiring_manager`
-
-**Success Response (201):**
-```json
-{
-  "success": true,
-  "message": "User registered successfully",
-  "data": {
-    "_id": "64f1a2b3c4d5e6f7g8h9i0j1",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "role": "student"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-**Error Response Examples:**
-
-```json
-{
-  "success": false,
-  "message": "Email already registered"
-}
-```
-
-```json
-{
-  "success": false,
-  "message": "Passwords do not match"
-}
-```
-
-```json
-{
-  "success": false,
-  "message": "Invalid role. Must be \"student\" or \"hiring_manager\""
-}
-```
+A full-stack Job Scraper and Applicant Tracking System (ATS) built with Next.js, Node.js, Express, and MongoDB Atlas. The platform provides role-based access for Students and Hiring Managers, supporting job posting, application tracking, resume analysis, ATS scoring, and applicant management.
 
 ---
 
-### Login User
+## Table of Contents
 
-**Endpoint:** `POST /api/auth/login`
-
-**Request Body:**
-```json
-{
-  "email": "john@example.com",
-  "password": "password123"
-}
-```
-
-**Success Response (200):**
-```json
-{
-  "success": true,
-  "message": "Login successful",
-  "data": {
-    "_id": "64f1a2b3c4d5e6f7g8h9i0j1",
-    "name": "John Doe",
-    "email": "john@example.com",
-    "role": "student"
-  },
-  "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
-}
-```
-
-**Error Response Examples:**
-
-```json
-{
-  "success": false,
-  "message": "Invalid credentials"
-}
-```
-
-```json
-{
-  "success": false,
-  "message": "Please provide email and password"
-}
-```
+- [Overview](#overview)
+- [Screenshots](#screenshots)
+- [Features](#features)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Environment Variables](#environment-variables)
+- [User Roles](#user-roles)
+- [Test Credentials](#test-credentials)
+- [Usage Guide](#usage-guide)
+- [License](#license)
 
 ---
 
-### Health Check
+## Overview
 
-**Endpoint:** `GET /api/health`
+The Job Scraper Platform connects students looking for opportunities with hiring managers looking to fill them. Students can browse jobs from both internal postings and external sources (RemoteOK), apply directly through the platform, and use a built-in ATS Resume Scanner to check how well their resume matches a job description. Hiring managers can post jobs, add screening questions, and review applicants along with their resumes and answers.
 
-**Response (200):**
-```json
-{
-  "success": true,
-  "message": "Server is running",
-  "timestamp": "2024-01-15T10:30:45.123Z"
-}
-```
+**Live Links**
+
+- Frontend: [job-scraper-frontend-orcin.vercel.app](https://job-scraper-frontend-orcin.vercel.app/)
+- Backend API: [job-scraper-backend-fju3.onrender.com](https://job-scraper-backend-fju3.onrender.com)
+- Frontend Repository: [GitHub](https://github.com/Ayanshaikh313/Job_Scraper_frontend)
+- Backend Repository: [GitHub](https://github.com/Ayanshaikh313/Job_Scraper_backend)
 
 ---
 
-## Testing Instructions
 
-### Using cURL
+## Features
 
-#### Test Health Check
-```bash
-curl http://localhost:5000/api/health
+### Student
+
+- Register and log in
+- View and update profile
+- Browse internal job postings
+- Browse external jobs aggregated from RemoteOK
+- Search jobs by keyword
+- View detailed job descriptions
+- Apply to jobs and upload a resume (PDF)
+- View application history and submitted answers
+- Run resumes through the ATS Resume Scanner for scoring, skill extraction, and gap analysis
+
+### Hiring Manager
+
+- Register and log in
+- View and update profile
+- Create, edit, and delete job postings
+- Add custom screening questions to job postings
+- View applicants for each job
+- Review submitted resumes and screening question answers
+- Update applicant status through the hiring pipeline
+
+Application status moves through the following stages:
+
 ```
-
-#### Register a new Student
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "test123",
-    "confirmPassword": "test123",
-    "role": "student"
-  }'
+Applied → Reviewing → Accepted / Rejected
 ```
-
-#### Register a new Hiring Manager
-```bash
-curl -X POST http://localhost:5000/api/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "Jane Manager",
-    "email": "jane@example.com",
-    "password": "test123",
-    "confirmPassword": "test123",
-    "role": "hiring_manager"
-  }'
-```
-
-#### Login User
-```bash
-curl -X POST http://localhost:5000/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "test123"
-  }'
-```
-
----
-
-### Using Postman
-
-1. Create a new Postman collection
-
-2. **Health Check Request:**
-   - Method: `GET`
-   - URL: `http://localhost:5000/api/health`
-   - Click Send
-
-3. **Register Request:**
-   - Method: `POST`
-   - URL: `http://localhost:5000/api/auth/register`
-   - Headers: `Content-Type: application/json`
-   - Body (raw JSON):
-   ```json
-   {
-     "name": "John Doe",
-     "email": "john@example.com",
-     "password": "test123",
-     "confirmPassword": "test123",
-     "role": "student"
-   }
-   ```
-   - Click Send
-   - **Copy the `token` from response**
-
-4. **Login Request:**
-   - Method: `POST`
-   - URL: `http://localhost:5000/api/auth/login`
-   - Headers: `Content-Type: application/json`
-   - Body (raw JSON):
-   ```json
-   {
-     "email": "john@example.com",
-     "password": "test123"
-   }
-   ```
-   - Click Send
-   - **Save the `token` for future authenticated requests**
-
----
-
-## Expected Test Results
-
-| Scenario | Expected Status | Notes |
-|----------|-----------------|-------|
-| Register with valid data | 201 Created | Returns JWT token |
-| Register duplicate email | 409 Conflict | Email already exists |
-| Register mismatched passwords | 400 Bad Request | Passwords do not match |
-| Register invalid role | 400 Bad Request | Role must be student or hiring_manager |
-| Register missing fields | 400 Bad Request | All fields required |
-| Login with correct credentials | 200 OK | Returns JWT token |
-| Login with wrong password | 401 Unauthorized | Invalid credentials |
-| Login with non-existent email | 401 Unauthorized | Invalid credentials |
-| Login missing fields | 400 Bad Request | Email and password required |
-| Health check | 200 OK | Server running |
-
----
-
-## Features Implemented - Phase 1
-
-✓ Express.js server with JavaScript  
-✓ MongoDB Atlas connection with Mongoose  
-✓ User model with required fields (name, email, password, role)  
-✓ Email uniqueness constraint  
-✓ Password hashing with bcryptjs  
-✓ Role-based user types (student, hiring_manager)  
-✓ JWT token generation with userId and role payload  
-✓ JWT token verification utility  
-✓ User registration endpoint with validation  
-✓ User login endpoint with password verification  
-✓ Authentication middleware for protected routes  
-✓ Authorization middleware for role-based access  
-✓ Error handling middleware  
-✓ CORS enabled  
-✓ Environment variables configuration  
 
 ---
 
 ## Tech Stack
 
-- **Runtime:** Node.js
-- **Framework:** Express.js
-- **Language:** JavaScript (ES6+)
-- **Database:** MongoDB Atlas with Mongoose
-- **Authentication:** JWT (jsonwebtoken)
-- **Password Security:** bcryptjs
-- **CORS:** cors
-- **Environment:** dotenv
+**Frontend**
+Next.js, TypeScript, Tailwind CSS, React, Shadcn UI Components, Lucide React, React Toastify
+
+**Backend**
+Node.js, Express.js
+
+**Database**
+MongoDB Atlas with Mongoose
+
+**Authentication**
+JWT-based authentication with bcrypt password hashing
+
+**File Uploads**
+Multer with local file storage
+
+**Deployment**
+Frontend on Vercel, backend on Render
+
+---
+
+## Getting Started
+
+The frontend and backend are maintained as two separate repositories.
+
+**Backend**
+
+```bash
+git clone https://github.com/Ayanshaikh313/Job_Scraper_backend.git
+cd Job_Scraper_backend
+npm install
+npm start
+```
+
+The backend runs on `http://localhost:5000`.
+
+**Frontend**
+
+```bash
+git clone https://github.com/Ayanshaikh313/Job_Scraper_frontend.git
+cd Job_Scraper_frontend
+npm install
+npm run dev
+```
+
+The frontend runs on `http://localhost:3000`.
+
+---
+
+## Environment Variables
+
+**Backend (`.env`)**
+
+```env
+PORT=5000
+MONGODB_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret
+JWT_EXPIRE=7d
+```
+
+**Frontend (`.env`)**
+
+```env
+NEXT_PUBLIC_API_URL=http://localhost:5000/api
+```
+
+---
+
+## User Roles
+
+The platform supports two roles, assigned at registration:
+
+- **Student** — can browse and apply to jobs, and use the ATS resume scanner
+- **Hiring Manager** — can create and manage job postings and review applicants
+
+---
+
+## Test Credentials
+
+Use the following accounts to log in and test both roles of the platform.
+
+**Student Account**
+
+```
+Email: student@example.com
+Password: Student@123
+```
+
+**Hiring Manager Account**
+
+```
+Email: manager@example.com
+Password: Manager@123
+```
+
+---
+
+## Usage Guide
+
+1. Register as either a Student or a Hiring Manager, or log in using the test credentials above.
+2. As a Student, browse internal and external job listings, apply to jobs, and upload your resume. Use the ATS Resume Scanner to check your resume against a job description and see your ATS score, matched skills, and improvement suggestions.
+3. As a Hiring Manager, create a job posting with optional screening questions, then review incoming applications, view resumes and answers, and update each applicant's status.
+
+---
+
+## License
+
+This project is open source and available for personal or educational use.
